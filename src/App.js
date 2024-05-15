@@ -17,8 +17,8 @@ const style = {
   container: `bg-slate-100 max-w-[500px] w-full m-auto rounded-md shadow-xl p-4`,
   heading: `text-3xl font-bold text-center text-gray-800 p-2`,
   form: `flex justify-between`,
-  input: `border p-2 w-full text-xl`,
-  button: `border p-4 ml-2 bg-purple-500 text-slate-100`,
+  input: `border p-2 w-full text-xl rounded-md`,
+  button: `border p-4 ml-2 bg-green-600 text-slate-100 rounded-md `,
   count: `text-center p-2`,
 };
 
@@ -26,11 +26,11 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
 
-  // Create todo
+  // criar tarefa
   const createTodo = async (e) => {
     e.preventDefault(e);
     if (input === '') {
-      alert('Please enter a valid todo');
+      alert('Por favor insira uma tarefa');
       return;
     }
     await addDoc(collection(db, 'todos'), {
@@ -40,7 +40,7 @@ function App() {
     setInput('');
   };
 
-  // Read todo from firebase
+  // ler tarefa do firebase
   useEffect(() => {
     const q = query(collection(db, 'todos'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -53,14 +53,14 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Update todo in firebase
+  // editar tarefa no firebase
   const toggleComplete = async (todo) => {
     await updateDoc(doc(db, 'todos', todo.id), {
       completed: !todo.completed,
     });
   };
 
-  // Delete todo
+  // Delete tarefa
   const deleteTodo = async (id) => {
     await deleteDoc(doc(db, 'todos', id));
   };
@@ -68,14 +68,14 @@ function App() {
   return (
     <div className={style.bg}>
       <div className={style.container}>
-        <h3 className={style.heading}>Todo App</h3>
+        <h3 className={style.heading}>Lista de Afazeres</h3>
         <form onSubmit={createTodo} className={style.form}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className={style.input}
             type='text'
-            placeholder='Add Todo'
+            placeholder='Adicionar tarefa....'
           />
           <button className={style.button}>
             <AiOutlinePlus size={30} />
@@ -92,7 +92,7 @@ function App() {
           ))}
         </ul>
         {todos.length < 1 ? null : (
-          <p className={style.count}>{`You have ${todos.length} todos`}</p>
+          <p className={style.count}>{`Você possui ${todos.length} tarefas!`}</p>
         )}
       </div>
     </div>
